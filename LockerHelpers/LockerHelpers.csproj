@@ -1,9 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Company>Kiryuumaru</Company>
+    <Authors>Kiryuumaru</Authors>
+    <Description>Provides helpers for execution locking mechanism.</Description>
+    <RepositoryUrl>https://github.com/Kiryuumaru/LockerHelpers</RepositoryUrl>
+    <PackageTags>Lock, ReadWrite, Read, Write, ReaderWriterLockSlim, SemaphoreSlim, Helper</PackageTags>
+    <PackageProjectUrl>https://github.com/Kiryuumaru/LockerHelpers</PackageProjectUrl>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>* Initial release</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
