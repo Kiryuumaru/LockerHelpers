@@ -6,7 +6,7 @@ Provides helpers for execution locking mechanism. Can be used for heavy multi th
 
 |Name|Info|
 | ------------------- | :------------------: |
-|ObservableHelpers|[![NuGet](https://buildstats.info/nuget/LockerHelpers?includePreReleases=true)](https://www.nuget.org/packages/LockerHelpers/)|
+|LockerHelpers|[![NuGet](https://buildstats.info/nuget/LockerHelpers?includePreReleases=true)](https://www.nuget.org/packages/LockerHelpers/)|
 
 ## Installation
 ```csharp
