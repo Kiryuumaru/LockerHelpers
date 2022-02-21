@@ -8,8 +8,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Company>Kiryuumaru</Company>
     <Authors>Kiryuumaru</Authors>
+    <Company>Kiryuumaru</Company>
     <Copyright>Kiryuumaru</Copyright>
     <Description>Provides helpers for execution locking mechanism.</Description>
     <PackageTags>Lock, ReadWrite, Read, Write, ReaderWriterLockSlim, SemaphoreSlim, Helper</PackageTags>
