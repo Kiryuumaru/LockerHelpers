@@ -13,6 +13,7 @@ namespace LockerHelpers;
 /// The type of the key.
 /// </typeparam>
 public class RWLockDictionary<TKey> : RWLock
+     where TKey : notnull
 {
     #region Properties
 
