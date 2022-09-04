@@ -24,7 +24,6 @@
 
   <PropertyGroup>
     <PackageReleaseNotes>* Added trimming for .net6.</PackageReleaseNotes>
-    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
