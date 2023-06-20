@@ -26,6 +26,10 @@
     <None Include="..\LICENSE" Pack="true" PackagePath="" />
     <None Include="..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DisposableHelpers" Version="1.1.9" />
+  </ItemGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0'">
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
