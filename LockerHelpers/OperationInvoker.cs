@@ -57,18 +57,10 @@ public class OperationInvoker
     /// <param name="cancellationToken">
     /// The cancellation token used for execution cancellation.
     /// </param>
-    public async void Post(Action action, CancellationToken? cancellationToken = null)
+    public async void Post(Action action, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
-        {
-            await operationLock.WaitAsync();
-            action();
-        }
-        else
-        {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) action();
-        }
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) action();
         operationLock.Release();
     }
 
@@ -81,18 +73,10 @@ public class OperationInvoker
     /// <param name="cancellationToken">
     /// The cancellation token used for execution cancellation.
     /// </param>
-    public async void Post(Func<Task> func, CancellationToken? cancellationToken = null)
+    public async void Post(Func<Task> func, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
-        {
-            await operationLock.WaitAsync();
-            await func();
-        }
-        else
-        {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) await func();
-        }
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) await func();
         operationLock.Release();
     }
 
@@ -105,18 +89,10 @@ public class OperationInvoker
     /// <param name="cancellationToken">
     /// The cancellation token used for execution cancellation.
     /// </param>
-    public void Send(Action action, CancellationToken? cancellationToken = null)
+    public void Send(Action action, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
-        {
-            operationLock.Wait();
-            action();
-        }
-        else
-        {
-            operationLock.Wait(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) action();
-        }
+        operationLock.Wait(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) action();
         operationLock.Release();
     }
 
@@ -132,11 +108,11 @@ public class OperationInvoker
     /// <param name="cancellationToken">
     /// The cancellation token used for execution cancellation.
     /// </param>
-    public void Send(Action action, bool returnOnLockFree, CancellationToken? cancellationToken = null)
+    public void Send(Action action, bool returnOnLockFree, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
+        operationLock.Wait(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested)
         {
-            operationLock.Wait();
             if (returnOnLockFree)
             {
                 Task.Run(delegate
@@ -153,27 +129,7 @@ public class OperationInvoker
         }
         else
         {
-            operationLock.Wait(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested)
-            {
-                if (returnOnLockFree)
-                {
-                    Task.Run(delegate
-                    {
-                        action();
-                        operationLock.Release();
-                    });
-                }
-                else
-                {
-                    action();
-                    operationLock.Release();
-                }
-            }
-            else
-            {
-                operationLock.Release();
-            }
+            operationLock.Release();
         }
     }
 
@@ -189,19 +145,11 @@ public class OperationInvoker
     /// <returns>
     /// The returned value of the <paramref name="func"/>.
     /// </returns>
-    public T? Send<T>(Func<T> func, CancellationToken? cancellationToken = null)
+    public T? Send<T>(Func<T> func, CancellationToken cancellationToken = default)
     {
         T? result = default;
-        if (cancellationToken == null)
-        {
-            operationLock.Wait();
-            result = func();
-        }
-        else
-        {
-            operationLock.Wait(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) result = func();
-        }
+        operationLock.Wait(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) result = func();
         operationLock.Release();
         return result;
     }
@@ -218,19 +166,11 @@ public class OperationInvoker
     /// <returns>
     /// The returned value of the <paramref name="func"/>.
     /// </returns>
-    public T? Send<T>(Func<Task<T>> func, CancellationToken? cancellationToken = null)
+    public T? Send<T>(Func<Task<T>> func, CancellationToken cancellationToken = default)
     {
         T? result = default;
-        if (cancellationToken == null)
-        {
-            operationLock.Wait();
-            result = func().Result;
-        }
-        else
-        {
-            operationLock.Wait(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) result = func().Result;
-        }
+        operationLock.Wait(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) result = func().Result;
         operationLock.Release();
         return result;
     }
@@ -247,18 +187,10 @@ public class OperationInvoker
     /// <returns>
     /// A <see cref="Task"/> that represents a proxy for the task returned by <paramref name="action"/>.
     /// </returns>
-    public async Task SendAsync(Action action, CancellationToken? cancellationToken = null)
+    public async Task SendAsync(Action action, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
-        {
-            await operationLock.WaitAsync();
-            action();
-        }
-        else
-        {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) action();
-        }
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) action();
         operationLock.Release();
     }
 
@@ -277,11 +209,11 @@ public class OperationInvoker
     /// <returns>
     /// A <see cref="Task"/> that represents a proxy for the task returned by <paramref name="action"/>.
     /// </returns>
-    public async Task SendAsync(Action action, bool returnOnLockFree, CancellationToken? cancellationToken = null)
+    public async Task SendAsync(Action action, bool returnOnLockFree, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested)
         {
-            await operationLock.WaitAsync();
             if (returnOnLockFree)
             {
                 void onLockFree()
@@ -302,31 +234,7 @@ public class OperationInvoker
         }
         else
         {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested)
-            {
-                if (returnOnLockFree)
-                {
-                    void onLockFree()
-                    {
-                        Task.Run(delegate
-                        {
-                            action();
-                            operationLock.Release();
-                        });
-                    }
-                    onLockFree();
-                }
-                else
-                {
-                    action();
-                    operationLock.Release();
-                }
-            }
-            else
-            {
-                operationLock.Release();
-            }
+            operationLock.Release();
         }
     }
 
@@ -342,18 +250,10 @@ public class OperationInvoker
     /// <returns>
     /// A <see cref="Task"/> that represents a proxy for the task returned by <paramref name="func"/>.
     /// </returns>
-    public async Task SendAsync(Func<Task> func, CancellationToken? cancellationToken = null)
+    public async Task SendAsync(Func<Task> func, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
-        {
-            await operationLock.WaitAsync();
-            await func();
-        }
-        else
-        {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) await func();
-        }
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) await func();
         operationLock.Release();
     }
 
@@ -372,11 +272,11 @@ public class OperationInvoker
     /// <returns>
     /// A <see cref="Task"/> that represents a proxy for the task returned by <paramref name="func"/>.
     /// </returns>
-    public async Task SendAsync(Func<Task> func, bool returnOnLockFree, CancellationToken? cancellationToken = null)
+    public async Task SendAsync(Func<Task> func, bool returnOnLockFree, CancellationToken cancellationToken = default)
     {
-        if (cancellationToken == null)
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested)
         {
-            await operationLock.WaitAsync();
             if (returnOnLockFree)
             {
                 async void onLockFree()
@@ -394,28 +294,7 @@ public class OperationInvoker
         }
         else
         {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested)
-            {
-                if (returnOnLockFree)
-                {
-                    async void onLockFree()
-                    {
-                        await func();
-                        operationLock.Release();
-                    }
-                    onLockFree();
-                }
-                else
-                {
-                    await func();
-                    operationLock.Release();
-                }
-            }
-            else
-            {
-                operationLock.Release();
-            }
+            operationLock.Release();
         }
     }
 
@@ -431,19 +310,11 @@ public class OperationInvoker
     /// <returns>
     /// A <see cref="Task"/> that represents a proxy for the task returned by <paramref name="func"/>.
     /// </returns>
-    public async Task<T?> SendAsync<T>(Func<T> func, CancellationToken? cancellationToken = null)
+    public async Task<T?> SendAsync<T>(Func<T> func, CancellationToken cancellationToken = default)
     {
         T? result = default;
-        if (cancellationToken == null)
-        {
-            await operationLock.WaitAsync();
-            result = func();
-        }
-        else
-        {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) result = func();
-        }
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) result = func();
         operationLock.Release();
         return result;
     }
@@ -460,19 +331,11 @@ public class OperationInvoker
     /// <returns>
     /// A <see cref="Task"/> that represents a proxy for the task returned by <paramref name="func"/>.
     /// </returns>
-    public async Task<T?> SendAsync<T>(Func<Task<T>> func, CancellationToken? cancellationToken = null)
+    public async Task<T?> SendAsync<T>(Func<Task<T>> func, CancellationToken cancellationToken = default)
     {
         T? result = default;
-        if (cancellationToken == null)
-        {
-            await operationLock.WaitAsync();
-            result = await func();
-        }
-        else
-        {
-            await operationLock.WaitAsync(cancellationToken.Value);
-            if (!cancellationToken.Value.IsCancellationRequested) result = await func();
-        }
+        await operationLock.WaitAsync(cancellationToken);
+        if (!cancellationToken.IsCancellationRequested) result = await func();
         operationLock.Release();
         return result;
     }
