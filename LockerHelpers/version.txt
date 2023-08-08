@@ -1,2 +1,2 @@
-2.0.1
-* Breaking changes
+2.0.2
+* Updated dependencies
