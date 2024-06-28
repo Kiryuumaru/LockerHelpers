@@ -5,11 +5,6 @@ VisualStudioVersion = 17.2.32210.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LockerHelpers", "LockerHelpers\LockerHelpers.csproj", "{4E541154-A02E-4A7D-98AA-A11C5D7B4ACB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D568B139-5EEC-4B95-B460-333A581EA1F4}"
-	ProjectSection(SolutionItems) = preProject
-		.github\dependabot.yml = .github\dependabot.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{B7A86AC9-1D09-469C-A1BF-7221C6467238}"
 EndProject
 Global
