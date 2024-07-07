@@ -94,7 +94,7 @@ jobs:
     needs:
     - PRE_SETUP
     - LOCKERHELPERSBUILD
-    if: "! failure() && ! cancelled() && needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSPUBLISH_CONDITION == 'true'"
+    if: "! failure() && ! cancelled() && needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSPUBLISH_CONDITION == 'true' && needs.LOCKERHELPERSBUILD.result != 'failure'"
     env:
       NUKE_PRE_SETUP: ${{ needs.PRE_SETUP.outputs.NUKE_PRE_SETUP }}
   POST_SETUP:
