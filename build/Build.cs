@@ -33,7 +33,6 @@ class Build : BaseNukeBuildHelpers
     BuildEntry LockerHelpersBuild => _ => _
         .AppId("locker_helpers")
         .RunnerOS(RunnerOS.Ubuntu2204)
-        .CommonReleaseAsset(OutputDirectory)
         .Execute(context =>
         {
             string version = "0.0.0";
@@ -68,6 +67,7 @@ class Build : BaseNukeBuildHelpers
     PublishEntry LockerHelpersPublish => _ => _
         .AppId("locker_helpers")
         .RunnerOS(RunnerOS.Ubuntu2204)
+        .ReleaseCommonAsset(OutputDirectory)
         .Execute(context =>
         {
             if (context.RunType == RunType.Bump)
