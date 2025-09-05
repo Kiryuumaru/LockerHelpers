@@ -35,7 +35,7 @@ class Build : BaseNukeBuildHelpers
         .Execute(context =>
         {
             var app = context.Apps.Values.First();
-            string version = app.AppVersion.ToString()!;
+            string version = app.AppVersion.Version.ToString()!;
             string? releaseNotes = null;
             if (app.BumpVersion != null)
             {
