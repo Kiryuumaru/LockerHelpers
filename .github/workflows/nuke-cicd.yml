@@ -61,6 +61,11 @@ jobs:
         fetch-tags: ${{ needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSBUILD_CHECKOUT_FETCH_TAGS }}
         submodules: ${{ needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSBUILD_CHECKOUT_SUBMODULES }}
         persist-credentials: true
+    - name: Download locker_helpers pre_test artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./.nuke/temp/artifacts-download
+        pattern: pre_test___locker_helpers___*
     - name: Cache Run
       uses: actions/cache@v4
       with:
@@ -72,11 +77,18 @@ jobs:
     - id: NUKE_RUN
       name: Run Nuke LockerHelpersBuild
       run: ${{ needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSBUILD_RUN_SCRIPT }} Run --args "LockerHelpersBuild"
-    - name: Upload Artifacts
+    - name: Upload locker_helpers build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build___locker_helpers___LOCKERHELPERSBUILD
-        path: ./.nuke/temp/artifacts-upload/*
+        path: ./.nuke/temp/artifacts-upload/locker_helpers/*
+        if-no-files-found: error
+        retention-days: 1
+    - name: Upload common build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build___$common___LOCKERHELPERSBUILD
+        path: ./.nuke/temp/artifacts-upload/$common/*
         if-no-files-found: error
         retention-days: 1
     needs:
@@ -94,11 +106,21 @@ jobs:
         fetch-tags: ${{ needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSPUBLISH_CHECKOUT_FETCH_TAGS }}
         submodules: ${{ needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSPUBLISH_CHECKOUT_SUBMODULES }}
         persist-credentials: true
-    - name: Download artifacts
+    - name: Download locker_helpers pre_test artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./.nuke/temp/artifacts-download
+        pattern: pre_test___locker_helpers___*
+    - name: Download locker_helpers build artifacts
       uses: actions/download-artifact@v4
       with:
         path: ./.nuke/temp/artifacts-download
         pattern: build___locker_helpers___*
+    - name: Download locker_helpers post_test artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./.nuke/temp/artifacts-download
+        pattern: post_test___locker_helpers___*
     - name: Cache Run
       uses: actions/cache@v4
       with:
@@ -110,11 +132,11 @@ jobs:
     - id: NUKE_RUN
       name: Run Nuke LockerHelpersPublish
       run: ${{ needs.PRE_SETUP.outputs.NUKE_PRE_SETUP_LOCKERHELPERSPUBLISH_RUN_SCRIPT }} Run --args "LockerHelpersPublish"
-    - name: Upload Artifacts
+    - name: Upload common publish artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: publish___locker_helpers___LOCKERHELPERSPUBLISH
-        path: ./.nuke/temp/artifacts-upload/*
+        name: publish___$common___LOCKERHELPERSPUBLISH
+        path: ./.nuke/temp/artifacts-upload/$common/*
         if-no-files-found: error
         retention-days: 1
     needs:
@@ -134,11 +156,11 @@ jobs:
         fetch-tags: true
         submodules: recursive
         persist-credentials: true
-    - name: Download Artifacts
+    - name: Download artifacts
       uses: actions/download-artifact@v4
       with:
         path: ./.nuke/temp/artifacts-download
-        pattern: publish___*
+        pattern: '*___*'
     - name: Run Nuke PipelinePostSetup
       run: chmod +x ./build.sh && ./build.sh PipelinePostSetup
     needs:
